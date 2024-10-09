@@ -30,6 +30,7 @@ typedef enum dt_color_checker_targets
   COLOR_CHECKER_SPYDER_48     = 4,
   COLOR_CHECKER_SPYDER_48_V2  = 5,
   COLOR_CHECKER_SPYDER_PHOTO  = 6,
+  COLOR_CHECKER_CHARTTU_MINI  = 7,
   COLOR_CHECKER_LAST
 } dt_color_checker_targets;
 
@@ -425,6 +426,45 @@ dt_color_checker_t spyder_photo = {  .name = "Datacolor SpyderCheckr Photo",
                                               { "H5", { 65.10,  18.14,  18.68 }, { 0.932, 0.712 } },
                                               { "H6", { 36.13,  14.15,  15.78 }, { 0.932, 0.854 } } } };
 
+dt_color_checker_t charttu_mini = { .name = "Charttu 24 Mini",
+                                    .author = "Charttu",
+                                    .date = "2024-10-08",
+                                    .manufacturer = "Charttu",
+                                    .type = COLOR_CHECKER_CHARTTU_MINI,
+                                    .radius = 0.055f,
+                                    .ratio = 2.f / 3.f,
+                                    .patches = 24,
+                                    .size = { 4, 6 },
+                                    .middle_grey = 21,
+                                    .white = 18,
+                                    .black = 23,
+                                    .values = {
+                                              { "A1", { 37.10,  14.00,  13.96 }, { 0.087, 0.125}},
+                                              { "A2", { 63.98,  18.67,  17.77 }, { 0.250, 0.125}},
+                                              { "A3", { 49.22,  -3.82, -22.22 }, { 0.417, 0.125}},
+                                              { "A4", { 43.30, -12.86,  22.40 }, { 0.584, 0.125}},
+                                              { "A5", { 54.80,   9.42, -24.27 }, { 0.751, 0.125}},
+                                              { "A6", { 70.76, -32.24,   0.85 }, { 0.918, 0.125}},
+                                              { "B1", { 62.15,  36.24,  55.49 }, { 0.087, 0.375}},
+                                              { "B2", { 38.87,  11.28, -45.38 }, { 0.250, 0.375}},
+                                              { "B3", { 50.00,  48.51,  16.43 }, { 0.417, 0.375}},
+                                              { "B4", { 30.72,  21.47, -20.67 }, { 0.584, 0.375}},
+                                              { "B5", { 71.36, -23.42,  57.64 }, { 0.751, 0.375}},
+                                              { "B6", { 71.99,  18.44,  66.29 }, { 0.918, 0.375}},
+                                              { "C1", { 28.34,  15.19, -50.08 }, { 0.087, 0.625}},
+                                              { "C2", { 53.94, -39.26,  32.92 }, { 0.250, 0.625}},
+                                              { "C3", { 42.15,  50.69,  28.01 }, { 0.417, 0.625}},
+                                              { "C4", { 81.70,   2.47,  78.67 }, { 0.584, 0.625}},
+                                              { "C5", { 50.55,  50.81, -14.16 }, { 0.751, 0.625}},
+                                              { "C6", { 50.22, -30.02, -27.44 }, { 0.918, 0.625}},
+                                              { "D1", { 95.08,  -1.15,   2.32 }, { 0.087, 0.875}},
+                                              { "D2", { 81.65,  -0.57,   0.05 }, { 0.250, 0.875}},
+                                              { "D3", { 67.12,  -0.73,  -0.25 }, { 0.417, 0.875}},
+                                              { "D4", { 50.73,  -0.09,   0.21 }, { 0.584, 0.875}},
+                                              { "D5", { 35.99,  -0.63,  -0.38 }, { 0.751, 0.875}},
+                                              { "D6", { 21.12,  -0.14,   0.31 }, { 0.918, 0.875}} } };
+
+
 dt_color_checker_t * dt_get_color_checker(const dt_color_checker_targets target_type)
 {
   switch(target_type)
@@ -449,6 +489,9 @@ dt_color_checker_t * dt_get_color_checker(const dt_color_checker_targets target_
 
     case COLOR_CHECKER_SPYDER_PHOTO:
       return &spyder_photo;
+
+    case COLOR_CHECKER_CHARTTU_MINI:
+      return &charttu_mini;
 
     case COLOR_CHECKER_LAST:
       return &xrite_24_2014;
