@@ -1,24 +1,25 @@
 name: Nightly PKG
 
-on:
-  schedule:
-    - cron: "0 0 * * *"
-  workflow_dispatch:
+on: workflow_dispatch
 
 permissions:
   contents: read
-  actions: write  # We need this to be able to cancel workflow if job fails
+  actions: write # We need this to be able to cancel workflow if job fails
 
 jobs:
   AppImage:
-    if: github.repository == 'darktable-org/darktable' || github.event_name == 'workflow_dispatch'
     name: Nightly darktable AppImage
     runs-on: ubuntu-22.04
     strategy:
       fail-fast: false
       matrix:
         compiler:
-          - { compiler: GNU12, CC: gcc-12, CXX: g++-12, packages: gcc-12 g++-12 }
+          - {
+              compiler: GNU12,
+              CC: gcc-12,
+              CXX: g++-12,
+              packages: gcc-12 g++-12,
+            }
         branch:
           - { code: master, label: gitmaster }
     env:
@@ -36,8 +37,6 @@ jobs:
     steps:
       - name: Install compiler ${{ matrix.compiler.compiler }}
         run: |
-          # Remove azure mirror because it is unreliable and sometimes unpredictably leads to failed CI
-          sudo sed -i 's/azure\.//' /etc/apt/sources.list
           sudo apt-get update
           sudo apt-get -y install \
             ${{ matrix.compiler.packages }}
@@ -123,7 +122,7 @@ jobs:
           cd ..
       - name: Cancel workflow if job fails
         if: ${{ failure() }}
-        uses: andymckay/cancel-action@0.4
+        uses: andymckay/cancel-action@0.5
       - name: Checkout darktable master branch
         run: |
           # Note that we can't make a shallow clone to reduce clone traffic and time, as we have to
@@ -151,7 +150,6 @@ jobs:
           retention-days: 1
 
   Windows:
-    if: github.repository == 'darktable-org/darktable' || github.event_name == 'workflow_dispatch'
     name: Nightly darktable Windows
     runs-on: windows-latest
     strategy:
@@ -233,7 +231,7 @@ jobs:
           pacman -U --noconfirm https://repo.msys2.org/mingw/ucrt64/mingw-w64-ucrt-x86_64-exiv2-0.27.7-1-any.pkg.tar.zst
       - name: Cancel workflow if job fails
         if: ${{ failure() }}
-        uses: andymckay/cancel-action@0.4
+        uses: andymckay/cancel-action@0.5
       - run: git config --global core.autocrlf input
         shell: bash
       - name: Checkout darktable master branch
@@ -275,7 +273,6 @@ jobs:
           retention-days: 2
 
   macOS:
-    if: github.repository == 'darktable-org/darktable' || github.event_name == 'workflow_dispatch'
     name: Nightly darktable macOS
     runs-on: ${{ matrix.build.os }}
     strategy:
@@ -285,9 +282,12 @@ jobs:
           - { os: macos-13, xcode: 15.2, deployment: 13.5 } # LLVM16, x86_64
           - { os: macos-14, xcode: 15.4, deployment: 14.0 } # LLVM16, arm64
         compiler:
-          - { compiler: XCode,   CC: cc, CXX: c++ }
-        btype: [ Release ]
-        eco: [-DBINARY_PACKAGE_BUILD=ON -DBUILD_CURVE_TOOLS=ON -DBUILD_NOISE_TOOLS=ON -DUSE_GRAPHICSMAGICK=OFF -DUSE_IMAGEMAGICK=ON]
+          - { compiler: XCode, CC: cc, CXX: c++ }
+        btype: [Release]
+        eco:
+          [
+            -DBINARY_PACKAGE_BUILD=ON -DBUILD_CURVE_TOOLS=ON -DBUILD_NOISE_TOOLS=ON -DUSE_GRAPHICSMAGICK=OFF -DUSE_IMAGEMAGICK=ON,
+          ]
         target:
           - skiptest
         generator:
@@ -329,7 +329,7 @@ jobs:
           brew link --force libsoup@2
       - name: Cancel workflow if job fails
         if: ${{ failure() }}
-        uses: andymckay/cancel-action@0.4
+        uses: andymckay/cancel-action@0.5
       - name: Build and Install
         run: |
           cmake -E make_directory "${BUILD_DIR}";
@@ -372,7 +372,7 @@ jobs:
         with:
           tag_name: nightly
           prerelease: true
-          name: 'Darktable nightly build $$'
+          name: "Darktable nightly build $$"
           # Please do not modify the body text by adding line breaks in paragraphs, as this text should display well on screens of different widths
           body: |
             This is a nightly build of Darktable.
@@ -384,6 +384,8 @@ jobs:
             The AppImage package is compatible with distribution releases that have glibc version 2.35 or higher. For example, if we consider some popular distributions, Ubuntu 22.04, Debian 12, Fedora 36 and newer releases are compatible.
 
             The `*.AppImage.zsync` file is not intended to be downloaded and used locally. Just ignore it. This file contains technical information required by AppImage auto-updaters such as [AppImageUpdate](https://appimage.github.io/AppImageUpdate/).
+
+            The Windows package requires Windows with UCRT (Universal C Runtime), which is shipped with Windows 10+. Darktable should also work on Windows 8.1 [on condition that you install this runtime yourself](https://support.microsoft.com/en-us/topic/update-for-universal-c-runtime-in-windows-c0514201-7fe6-95a3-b0a5-287930f3560c).
 
             The macOS `*-x86_64.dmg` package requires at least macOS 13.5 (Ventura), the `*-arm64.dmg` package requires at least macOS 14.0 (Sonoma).
 
