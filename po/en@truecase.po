@@ -14650,6 +14650,10 @@ msgstr "Datacolor SpyderCheckr 48 post-2018"
 msgid "Datacolor SpyderCheckr Photo"
 msgstr "Datacolor SpyderCheckr Photo"
 
+#: ../src/iop/channelmixerrgb.c:4731
+msgid "Charttu 24 Mini"
+msgstr "Charttu 24 Mini"
+
 #: ../src/iop/channelmixerrgb.c:4736
 msgid "optimize for"
 msgstr "Optimize for"
