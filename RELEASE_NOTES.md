@@ -199,6 +199,10 @@ changes (where available).
   
 - Fixed issue in darktable-cli that prevented input files from being detected.
 
+- Allow the variable `$(ROLL.NAME)` to have optional levels, `$(ROLL.NAME[n])`,
+  the levels follow the same rules as film roll, the default value `n=1`, this
+  keep the previous behavior of `$(ROLL.NAME)`.
+
 ## Lua
 
 ### API Version
